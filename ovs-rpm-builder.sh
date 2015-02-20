@@ -1,5 +1,5 @@
 #!/bin/bash
-# Create OpenvSwitch rpms for CentOS 6.6
+# Creates Open vSwitch RPM files in CentOS 6 and RHEL6
 
 DL_URL="http://openvswitch.org/releases/"
 DL_VER="openvswitch-2.3.1.tar.gz"
