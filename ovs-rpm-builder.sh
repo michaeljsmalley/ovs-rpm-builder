@@ -1,10 +1,20 @@
 #!/bin/bash
 # Creates Open vSwitch RPM files in CentOS 6 and RHEL6
 
+# Make sure only root can run this script
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root" 1>&2
+   exit 1
+fi
+
+# Download URL
 DL_URL="http://openvswitch.org/releases/"
+# File to download
 DL_VER="openvswitch-2.3.1.tar.gz"
+# Untarred directory name (e.g. openvswitch-2.3.1.tar.gz untars to openvswitch-2.3.1/)
 EXTRACTED_TAR_DIR=$(echo $DL_VER | sed -r 's/\.[[:alnum:]]+\.[[:alnum:]]+$//')
 
+# The success of this script depends on all of the following packages
 declare -a dependencies=("gcc" \
                          "make" \
                          "python-devel" \
@@ -19,7 +29,7 @@ declare -a dependencies=("gcc" \
                          "libtool" \
                          "wget")
 
-# Install Dependencies if necessary
+# Install dependencies if necessary
 for package in "${dependencies[@]}"
 do
   rpm -qa | grep $package 2>&1 > /dev/null
@@ -47,5 +57,5 @@ cp /root/rpmbuild/SOURCES/$EXTRACTED_TAR_DIR/rhel/openvswitch-kmod.files /root/r
 rpmbuild -bb rhel/openvswitch-kmod-rhel6.spec
 
 # Echo location of RPMs
-echo "Finished. All of the following RPMs are now located at /root/rpmbuild/RPMS/"
+echo "Finished. All of the following RPMs are now located within /root/rpmbuild/RPMS/"
 ls -lah /root/rpmbuild/RPMS/*
